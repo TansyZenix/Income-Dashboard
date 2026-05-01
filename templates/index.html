@@ -3,304 +3,430 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>兼职收益看板</title>
+    <title>收益看板</title>
     <link href="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <style>
+        :root {
+            --bg: #f5f5f7;
+            --card-bg: rgba(255,255,255,0.72);
+            --card-border: rgba(0,0,0,0.06);
+            --text-primary: #1d1d1f;
+            --text-secondary: #86868b;
+            --text-tertiary: #aeaeb2;
+            --accent: #0071e3;
+            --accent-hover: #0077ed;
+            --success: #34c759;
+            --warning: #ff9f0a;
+            --danger: #ff3b30;
+            --purple: #af52de;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+            --radius-sm: 10px;
+            --radius: 16px;
+            --radius-lg: 20px;
+            --transition: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
         * { box-sizing: border-box; }
+
         body {
-            background: #f4f6fa;
-            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
-            color: #2d3748;
+            background: var(--bg);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'PingFang SC', 'Helvetica Neue', sans-serif;
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
         }
 
-        /* ── 标题 ── */
-        .header-area { margin-bottom: 28px; }
-        .header-area h1 { font-size: 1.6rem; font-weight: 700; color: #1a202c; }
-        .header-area p { color: #a0aec0; font-size: 0.9rem; margin: 2px 0 0 0; }
+        /* ── Hero Header ── */
+        .hero {
+            text-align: center;
+            padding: 48px 0 40px;
+        }
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .hero .tagline {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.01em;
+        }
 
-        /* ── 统计卡片 ── */
+        /* ── Stat Cards ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
         .stat-card {
-            border-radius: 18px;
-            border: none;
-            padding: 22px 26px;
-            color: #fff;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            transition: transform 0.25s ease;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            cursor: default;
         }
-        .stat-card:hover { transform: translateY(-4px); }
-        .stat-card .stat-icon { font-size: 1.6rem; line-height: 1; }
-        .stat-card .stat-label { font-size: 0.85rem; opacity: 0.9; margin-bottom: 2px; }
-        .stat-card .stat-amount { font-size: 2rem; font-weight: 700; line-height: 1.2; }
+        .stat-card .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 14px;
+        }
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+        .stat-card .stat-amount {
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1.15;
+        }
+        .stat-card .stat-sub {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+        .icon-total    { background: rgba(0,113,227,0.1);   color: var(--accent); }
+        .icon-pending  { background: rgba(255,159,10,0.1);  color: var(--warning); }
+        .icon-settled  { background: rgba(52,199,89,0.1);   color: var(--success); }
+        .icon-progress { background: rgba(175,82,222,0.1);  color: var(--purple); }
 
-        .card-total { background: linear-gradient(135deg, #3b82f6, #8b5cf6); }
-        .card-pending { background: linear-gradient(135deg, #f59e0b, #ef4444); }
-        .card-settled { background: linear-gradient(135deg, #10b981, #06b6d4); }
-        .card-progress { background: linear-gradient(135deg, #f97316, #ec4899); }
-
-        /* ── 区块卡片 ── */
+        /* ── Section Card ── */
         .section-card {
             background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            padding: 24px;
-            margin-bottom: 22px;
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: var(--radius-lg);
+            padding: 24px 28px;
+            margin-bottom: 20px;
         }
-        .section-card .card-title {
+        .section-card .section-title {
             font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid #edf2f7;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        /* ── 表单 ── */
-        .form-label-custom {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #4a5568;
-            margin-bottom: 5px;
-        }
-        .form-control, .form-select {
-            border-radius: 10px;
-            border: 1.5px solid #e2e8f0;
-            padding: 9px 14px;
-            font-size: 0.9rem;
-            transition: border 0.2s, box-shadow 0.2s;
-        }
-        .form-control:focus, .form-select:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
-        }
-        .btn-add {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            border: none;
-            border-radius: 10px;
-            padding: 9px 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #fff;
-            transition: transform 0.2s, box-shadow 0.2s;
-            white-space: nowrap;
-        }
-        .btn-add:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(59,130,246,0.4);
-            color: #fff;
-        }
-        .form-hint { font-size: 0.8rem; color: #a0aec0; margin-top: 6px; }
-
-        /* ── 筛选 / 排序条 ── */
-        .filter-bar { margin-bottom: 16px; }
-        .filter-bar .form-label { font-size: 0.82rem; font-weight: 500; color: #4a5568; margin-bottom: 3px; }
-        .filter-bar .form-select,
-        .filter-bar .form-control {
-            border-radius: 8px;
-            font-size: 0.85rem;
-            padding: 6px 12px;
-        }
-        .btn-reset {
-            border-radius: 8px;
-            font-size: 0.82rem;
-            padding: 6px 14px;
-            border: 1.5px solid #e2e8f0;
-            background: #fff;
-            color: #718096;
-            text-decoration: none;
-            transition: all 0.2s;
+        .section-card .section-title .title-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
             display: inline-block;
         }
-        .btn-reset:hover { background: #f7fafc; border-color: #cbd5e0; color: #2d3748; }
 
-        /* ── 表格 ── */
+        /* ── Form ── */
+        .form-label-apple {
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+        .form-control, .form-select {
+            border-radius: var(--radius-sm);
+            border: 1px solid rgba(0,0,0,0.12);
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            background: rgba(255,255,255,0.6);
+            transition: all var(--transition);
+            font-family: inherit;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+            background: #fff;
+            outline: none;
+        }
+        .form-control::placeholder { color: #c7c7cc; }
+        .form-check-input:checked {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+        .form-check-input:focus {
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+        }
+
+        .btn-primary-apple {
+            background: var(--accent);
+            border: none;
+            border-radius: 24px;
+            padding: 10px 22px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #fff;
+            letter-spacing: -0.01em;
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .btn-primary-apple:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 2px 12px rgba(0,113,227,0.3);
+            color: #fff;
+        }
+        .btn-primary-apple:active {
+            transform: scale(0.97);
+        }
+
+        /* ── Filter Bar ── */
+        .filter-bar {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .filter-bar .form-select {
+            width: auto;
+            min-width: 130px;
+        }
+        .btn-reset-apple {
+            border-radius: 24px;
+            font-size: 0.82rem;
+            padding: 8px 18px;
+            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.5);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--transition);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .btn-reset-apple:hover {
+            background: #fff;
+            color: var(--text-primary);
+            border-color: rgba(0,0,0,0.2);
+        }
+        .badge-count {
+            background: rgba(0,0,0,0.04);
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.78rem;
+            padding: 5px 14px;
+            border-radius: 20px;
+        }
+
+        /* ── Table ── */
+        .table-wrap { overflow-x: auto; }
         .table { margin-bottom: 0; }
         .table thead th {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #8892b0;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-tertiary);
             text-transform: uppercase;
-            letter-spacing: 0.4px;
-            border-top: none;
-            border-bottom: 1.5px solid #edf2f7;
-            padding: 12px 10px;
+            letter-spacing: 0.05em;
+            border: none;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            padding: 10px 12px;
             white-space: nowrap;
             user-select: none;
         }
         .table thead th a.sort-link {
-            color: #8892b0;
+            color: var(--text-tertiary);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-            transition: color 0.15s;
+            gap: 3px;
+            transition: color var(--transition);
         }
-        .table thead th a.sort-link:hover { color: #3b82f6; }
-        .table thead th a.sort-link.active { color: #3b82f6; font-weight: 700; }
-        .sort-arrow { font-size: 0.7rem; line-height: 1; }
+        .table thead th a.sort-link:hover { color: var(--accent); }
+        .table thead th a.sort-link.active { color: var(--accent); font-weight: 600; }
+        .sort-arrow { font-size: 0.65rem; opacity: 0.6; }
         .table tbody td {
-            padding: 14px 10px;
-            font-size: 0.9rem;
+            padding: 13px 12px;
+            font-size: 0.87rem;
             vertical-align: middle;
-            border-bottom: 1px solid #f7fafc;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
             white-space: nowrap;
         }
         .table tbody tr:last-child td { border-bottom: none; }
-        .table tbody tr:hover { background: #f7fafc; }
+        .table tbody tr:hover { background: rgba(0,0,0,0.015); }
 
         .path-code {
-            font-size: 0.82rem;
-            color: #718096;
-            background: #f1f4f9;
-            padding: 3px 10px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(0,0,0,0.03);
+            padding: 4px 10px;
             border-radius: 6px;
-            font-family: 'SFMono-Regular', Consolas, monospace;
+            font-family: 'SF Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
         }
 
-        /* ── 状态徽章 ── */
-        .badge-custom {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 16px;
-            border-radius: 50px;
-            font-size: 0.82rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .badge-pending { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
-        .badge-settled { background: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
-
-        /* ── 操作按钮 ── */
-        .action-group {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            flex-wrap: nowrap;
-        }
-        .btn-action {
+        /* ── Status Badges ── */
+        .badge-apple {
             display: inline-flex;
             align-items: center;
             gap: 4px;
-            border-radius: 8px;
-            padding: 5px 12px;
-            font-size: 0.82rem;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .badge-unsettled { background: rgba(255,159,10,0.08); color: #cc7a00; }
+        .badge-settled   { background: rgba(52,199,89,0.08);  color: #248a3d; }
+
+        /* ── Action Buttons ── */
+        .action-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        .btn-act {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            border-radius: 20px;
+            padding: 5px 13px;
+            font-size: 0.78rem;
             font-weight: 500;
             border: none;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all var(--transition);
             white-space: nowrap;
+            letter-spacing: -0.01em;
         }
-        .btn-settle { background: #eef2ff; color: #4f46e5; }
-        .btn-settle:hover { background: #4f46e5; color: #fff; }
-        .btn-complete { background: #eef2ff; color: #4f46e5; }
-        .btn-complete:hover { background: #4f46e5; color: #fff; }
-        .btn-rollback { background: #fffbeb; color: #d97706; }
-        .btn-rollback:hover { background: #d97706; color: #fff; }
-        .btn-del { background: #fef2f2; color: #dc2626; padding: 5px 10px; }
-        .btn-del:hover { background: #dc2626; color: #fff; }
+        .btn-act-settle   { background: rgba(0,113,227,0.06);  color: var(--accent); }
+        .btn-act-settle:hover   { background: var(--accent); color: #fff; }
+        .btn-act-rollback { background: rgba(255,159,10,0.06); color: #b37400; }
+        .btn-act-rollback:hover { background: var(--warning); color: #fff; }
+        .btn-act-complete { background: rgba(52,199,89,0.08);  color: #248a3d; }
+        .btn-act-complete:hover { background: var(--success); color: #fff; }
+        .btn-act-del      { background: rgba(255,59,48,0.06);  color: var(--danger); padding: 5px 10px; }
+        .btn-act-del:hover      { background: var(--danger); color: #fff; }
+        .btn-act:active { transform: scale(0.95); }
 
-        .empty-state { padding: 48px 0; color: #a0aec0; font-size: 0.95rem; text-align: center; }
-        .footer-text { text-align: center; color: #a0aec0; font-size: 0.78rem; margin-top: 18px; }
+        .empty-state {
+            padding: 56px 0;
+            color: var(--text-tertiary);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        .footer-text {
+            text-align: center;
+            color: var(--text-tertiary);
+            font-size: 0.75rem;
+            margin-top: 24px;
+            padding-bottom: 16px;
+        }
 
-        /* ── 响应式 ── */
+        /* ── Responsive ── */
+        @media (max-width: 992px) {
+            .stat-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 768px) {
-            .header-area h1 { font-size: 1.3rem; }
-            .stat-card .stat-amount { font-size: 1.5rem; }
-            .section-card { padding: 16px; }
-            .table tbody td, .table thead th { padding: 10px 6px; font-size: 0.82rem; }
+            .stat-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .stat-card { padding: 16px 18px; }
+            .stat-card .stat-amount { font-size: 1.4rem; }
+            .section-card { padding: 18px 16px; }
+            .table tbody td, .table thead th { padding: 9px 7px; font-size: 0.8rem; }
         }
-
         @media (max-width: 576px) {
-            .action-group { gap: 4px; }
-            .btn-action { padding: 4px 8px; font-size: 0.78rem; }
+            .stat-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+            .action-group { gap: 3px; }
+            .btn-act { padding: 4px 9px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="container py-4">
+<!-- ── Hero ── -->
+<div class="hero">
+    <h1>收益看板</h1>
+    <p class="tagline">记录每一份付出，见证每一笔收获</p>
+</div>
 
-    <!-- ====== 标题 ====== -->
-    <div class="header-area text-center">
-        <h1>📊 兼职收益看板</h1>
-        <p>记录每一份付出，见证每一笔收获</p>
-    </div>
+<div class="container">
 
-    <!-- ====== 统计卡片 ====== -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3 d-flex">
-            <div class="stat-card card-total text-center h-100 w-100">
-                <div class="stat-icon mb-2">💰</div>
-                <div class="stat-label">实际到手</div>
-                <div class="stat-amount">￥{{ "%.0f"|format(total) }}</div>
-                <div style="font-size:0.75rem; opacity:0.7;">原价 ￥{{ "%.0f"|format(total_original) }}</div>
-            </div>
+    <!-- ── Stat Cards ── -->
+    <div class="stat-grid">
+        <div class="stat-card">
+            <div class="stat-icon icon-total">💰</div>
+            <div class="stat-label">实际到手</div>
+            <div class="stat-amount">¥{{ "%.0f"|format(total) }}</div>
+            <div class="stat-sub">原价 ¥{{ "%.0f"|format(total_original) }}</div>
         </div>
-        <div class="col-md-3 d-flex">
-            <div class="stat-card card-pending text-center h-100 w-100">
-                <div class="stat-icon mb-2">⏳</div>
-                <div class="stat-label">待结清</div>
-                <div class="stat-amount">￥{{ "%.0f"|format(pending) }}</div>
-            </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-pending">⏳</div>
+            <div class="stat-label">待结清</div>
+            <div class="stat-amount">¥{{ "%.0f"|format(pending) }}</div>
         </div>
-        <div class="col-md-3 d-flex">
-            <div class="stat-card card-settled text-center h-100 w-100">
-                <div class="stat-icon mb-2">✅</div>
-                <div class="stat-label">已到账</div>
-                <div class="stat-amount">￥{{ "%.0f"|format(settled) }}</div>
-            </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-settled">✅</div>
+            <div class="stat-label">已到账</div>
+            <div class="stat-amount">¥{{ "%.0f"|format(settled) }}</div>
         </div>
-        <div class="col-md-3 d-flex">
-            <div class="stat-card card-progress text-center h-100 w-100">
-                <div class="stat-icon mb-2">📋</div>
-                <div class="stat-label">进行中</div>
-                <div class="stat-amount">￥{{ "%.0f"|format(in_progress_amount) }}</div>
-            </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-progress">📋</div>
+            <div class="stat-label">进行中</div>
+            <div class="stat-amount">¥{{ "%.0f"|format(in_progress_amount) }}</div>
         </div>
     </div>
 
-    <!-- ====== 添加快捷记录 ====== -->
+    <!-- ── Add Record ── -->
     <div class="section-card">
-        <div class="card-title">📝 添加快捷记录</div>
+        <div class="section-title">
+            <span class="title-dot"></span> 新增记录
+        </div>
         <form action="/add" method="post">
             <div class="row g-3">
                 <div class="col-md-4">
-                    <div class="form-label-custom">项目类型</div>
-                    <input type="text" class="form-control" name="type" placeholder="如：爬虫数据抓取" required>
+                    <div class="form-label-apple">项目类型</div>
+                    <input type="text" class="form-control" name="type" placeholder="例如：爬虫数据抓取" required>
                 </div>
                 <div class="col-md-2">
-                    <div class="form-label-custom">编号</div>
-                    <input type="text" class="form-control" name="id" placeholder="如：010" required>
+                    <div class="form-label-apple">编号</div>
+                    <input type="text" class="form-control" name="id" placeholder="例如：013" required>
                 </div>
                 <div class="col-md-2">
-                    <div class="form-label-custom">金额 (￥)</div>
-                    <input type="number" class="form-control" name="amount" placeholder="如：100" min="1" required>
+                    <div class="form-label-apple">金额</div>
+                    <input type="number" class="form-control" name="amount" placeholder="100" min="1" required>
                 </div>
                 <div class="col-md-4">
-                    <div class="form-label-custom">完成日期</div>
+                    <div class="form-label-apple">完成日期</div>
                     <input type="date" class="form-control" name="completion_date" required>
                 </div>
                 <div class="col-12">
-                    <div class="form-label-custom">本地路径</div>
+                    <div class="form-label-apple">本地路径</div>
                     <input type="text" class="form-control" name="path" placeholder="D:\大三大四\兼职\..." required>
                 </div>
-                <div class="col-12 d-flex justify-content-between align-items-center">
+                <div class="col-12 d-flex justify-content-between align-items-center flex-wrap gap-3">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="status_incomplete" id="status_incomplete">
-                        <label class="form-check-label" for="status_incomplete" style="font-size:0.85rem; color:#718096;">
-                            📋 仅记录接单，项目尚未开始做
+                        <label class="form-check-label" for="status_incomplete" style="font-size:0.84rem; color: var(--text-secondary);">
+                            仅记录接单，项目尚未开始
                         </label>
                     </div>
-                    <div class="d-flex align-items-center gap-3">
-                        <div class="form-hint mb-0">⏱ 预计结款日期自动设为完成日期 + 5 天</div>
-                        <button type="submit" class="btn-add px-4">➕ 添加项目</button>
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <span style="font-size:0.78rem; color: var(--text-tertiary);">预计结款日期 = 完成日期 + 5 天</span>
+                        <button type="submit" class="btn-primary-apple">添加项目</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 
-    <!-- Helper: 生成排序列链接 -->
+    <!-- Helper macros -->
     {% macro sort_url(field) %}
         {%- if sort_by == field and sort_order == 'asc' -%}
             ?sort_by={{ field }}&sort_order=desc&filter_settled={{ filter_settled }}
@@ -315,40 +441,38 @@
         {%- endif -%}
     {% endmacro %}
 
-    <!-- ====== 进行中 ====== -->
+    <!-- ── In Progress ── -->
     {% if incomplete %}
     <div class="section-card">
-        <div class="card-title d-flex justify-content-between align-items-center">
-            <span>📋 进行中（未完成）</span>
-            <span class="badge bg-light text-dark px-3 py-2" style="font-weight:500; font-size:0.8rem;">
-                {{ incomplete|length }} 项
-            </span>
+        <div class="section-title d-flex justify-content-between align-items-center">
+            <span><span class="title-dot" style="background: var(--purple);"></span> 进行中</span>
+            <span class="badge-count">{{ incomplete|length }} 项</span>
         </div>
-        <div class="table-responsive">
+        <div class="table-wrap">
             <table class="table">
                 <thead>
                     <tr>
-                        <th style="min-width:38px;">#</th>
-                        <th style="min-width:95px;">项目类型</th>
-                        <th style="min-width:55px;">编号</th>
-                        <th style="min-width:190px;">本地路径</th>
-                        <th style="min-width:65px;">金额</th>
-                        <th style="min-width:125px;">操作</th>
+                        <th>#</th>
+                        <th>项目类型</th>
+                        <th>编号</th>
+                        <th>本地路径</th>
+                        <th>金额</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for r in incomplete %}
                     <tr>
-                        <td class="text-muted">{{ loop.index }}</td>
+                        <td style="color: var(--text-tertiary);">{{ loop.index }}</td>
                         <td><strong>{{ r.type }}</strong></td>
                         <td>{{ r.id }}</td>
                         <td><span class="path-code">{{ r.path }}</span></td>
-                        <td><strong>￥{{ r.amount }}</strong></td>
+                        <td><strong>¥{{ r.amount }}</strong></td>
                         <td>
                             <div class="action-group">
-                                <a href="/complete/{{ r.id }}" class="btn-action btn-complete">✅ 完成</a>
-                                <a href="/delete/{{ r.id }}" class="btn-action btn-del"
-                                   onclick="return confirm('确定删除 #{{ r.id }} 吗？')">🗑️</a>
+                                <a href="/complete/{{ r.id }}" class="btn-act btn-act-complete">完成</a>
+                                <a href="/delete/{{ r.id }}" class="btn-act btn-act-del"
+                                   onclick="return confirm('确定删除 #{{ r.id }} 吗？')">删除</a>
                             </div>
                         </td>
                     </tr>
@@ -359,105 +483,102 @@
     </div>
     {% endif %}
 
-    <!-- ====== 项目清单 ====== -->
+    <!-- ── Completed Records ── -->
     <div class="section-card">
-        <div class="card-title d-flex justify-content-between align-items-center">
-            <span>📂 项目清单</span>
-            <span class="badge bg-light text-dark px-3 py-2" style="font-weight:500; font-size:0.8rem;">
-                {{ records|length }} 项
-            </span>
+        <div class="section-title d-flex justify-content-between align-items-center">
+            <span><span class="title-dot"></span> 项目清单</span>
+            <span class="badge-count">{{ records|length }} 项</span>
         </div>
 
-        <!-- 筛选栏 -->
+        <!-- Filter -->
         <div class="filter-bar">
-            <form method="get" class="row g-2 align-items-end">
-                <div class="col-auto">
-                    <div class="form-label">状态筛选</div>
+            <form method="get" class="d-flex align-items-end gap-2 flex-wrap">
+                <div>
+                    <div class="form-label-apple" style="margin-bottom:2px;">状态</div>
                     <select name="filter_settled" class="form-select" onchange="this.form.submit()">
                         <option value="all" {{ 'selected' if filter_settled == 'all' }}>全部</option>
                         <option value="unsettled" {{ 'selected' if filter_settled == 'unsettled' }}>未结清</option>
                         <option value="settled" {{ 'selected' if filter_settled == 'settled' }}>已结清</option>
                     </select>
                 </div>
-                <div class="col-auto">
-                    <div class="form-label">&nbsp;</div>
-                    <input type="hidden" name="sort_by" value="{{ sort_by }}">
-                    <input type="hidden" name="sort_order" value="{{ sort_order }}">
-                    <a href="?" class="btn-reset">🔄 重置</a>
-                </div>
+                <input type="hidden" name="sort_by" value="{{ sort_by }}">
+                <input type="hidden" name="sort_order" value="{{ sort_order }}">
+                <a href="?" class="btn-reset-apple">重置</a>
             </form>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-wrap">
             <table class="table">
                 <thead>
                     <tr>
-                        <th style="min-width:38px;">#</th>
-                        <th style="min-width:95px;">项目类型</th>
-                        <th style="min-width:55px;">
+                        <th>#</th>
+                        <th>项目类型</th>
+                        <th>
                             <a href="{{ sort_url('id') }}" class="sort-link {{ 'active' if sort_by == 'id' }}">
                                 编号{{ sort_arrow('id') }}
                             </a>
                         </th>
-                        <th style="min-width:190px;">本地路径</th>
-                        <th style="min-width:95px;">
+                        <th>本地路径</th>
+                        <th>
                             <a href="{{ sort_url('completion_date') }}" class="sort-link {{ 'active' if sort_by == 'completion_date' }}">
                                 完成日期{{ sort_arrow('completion_date') }}
                             </a>
                         </th>
-                        <th style="min-width:95px;">
+                        <th>
                             <a href="{{ sort_url('expected_settlement_date') }}" class="sort-link {{ 'active' if sort_by == 'expected_settlement_date' }}">
                                 预计结款{{ sort_arrow('expected_settlement_date') }}
                             </a>
                         </th>
-                        <th style="min-width:65px;">
+                        <th>
                             <a href="{{ sort_url('amount') }}" class="sort-link {{ 'active' if sort_by == 'amount' }}">
                                 金额{{ sort_arrow('amount') }}
                             </a>
                         </th>
-                        <th style="min-width:55px;">
+                        <th>
                             <a href="{{ sort_url('fee') }}" class="sort-link {{ 'active' if sort_by == 'fee' }}">
                                 手续费{{ sort_arrow('fee') }}
                             </a>
                         </th>
-                        <th style="min-width:65px;">实际到手</th>
-                        <th style="min-width:105px;">状态</th>
-                        <th style="min-width:125px;">操作</th>
+                        <th>实际到手</th>
+                        <th>状态</th>
+                        <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for r in records %}
                     <tr>
-                        <td class="text-muted">{{ loop.index }}</td>
+                        <td style="color: var(--text-tertiary);">{{ loop.index }}</td>
                         <td><strong>{{ r.type }}</strong></td>
                         <td>{{ r.id }}</td>
                         <td><span class="path-code">{{ r.path }}</span></td>
                         <td>{{ r.completion_date }}</td>
                         <td>{{ r.expected_settlement_date }}</td>
-                        <td><strong>￥{{ r.amount }}</strong></td>
+                        <td><strong>¥{{ r.amount }}</strong></td>
                         <td>
                             {{ r.fee }}
-                            <a href="#" onclick="return editFee('{{ r.id }}', {{ r.fee }})" class="text-decoration-none" title="修改手续费">✏️</a>
+                            <a href="#" onclick="return editFee('{{ r.id }}', {{ r.fee }})"
+                               style="color: var(--accent); text-decoration: none; margin-left: 2px;"
+                               title="修改手续费">✏️</a>
                         </td>
-                        <td><strong>￥{{ r.amount - r.fee }}</strong></td>
+                        <td><strong>¥{{ r.amount - r.fee }}</strong></td>
                         <td>
                             {% if r.settled %}
-                                <span class="badge-custom badge-settled">✅ 已结清</span>
+                                <span class="badge-apple badge-settled">已结清</span>
                             {% else %}
-                                <span class="badge-custom badge-pending">⏳ 未结清</span>
+                                <span class="badge-apple badge-unsettled">未结清</span>
                             {% endif %}
                         </td>
                         <td>
                             <div class="action-group">
-                                <a href="/uncomplete/{{ r.id }}" class="btn-action btn-rollback"
-                                   onclick="return confirm('将 #{{ r.id }} 移回进行中？')">📋 撤回完成</a>
+                                <a href="/uncomplete/{{ r.id }}" class="btn-act btn-act-rollback"
+                                   onclick="return confirm('将 #{{ r.id }} 移回进行中？')">撤回</a>
                                 {% if r.settled %}
-                                    <a href="/settle/{{ r.id }}" class="btn-action btn-rollback">↩️ 撤回结算</a>
+                                    <a href="/settle/{{ r.id }}" class="btn-act btn-act-rollback">撤销结算</a>
                                 {% else %}
-                                    <a href="/settle/{{ r.id }}" class="btn-action btn-settle">💰 结算</a>
+                                    <a href="/settle/{{ r.id }}" class="btn-act btn-act-settle">结算</a>
                                 {% endif %}
-                                <a href="/delete/{{ r.id }}" class="btn-action btn-del"
-                                   onclick="return confirm('确定删除 #{{ r.id }} 吗？')">🗑️</a>
+                                <a href="/delete/{{ r.id }}" class="btn-act btn-act-del"
+                                   onclick="return confirm('确定删除 #{{ r.id }} 吗？')">删除</a>
                             </div>
                         </td>
                     </tr>
@@ -466,31 +587,31 @@
             </table>
         </div>
         {% if records|length == 0 %}
-        <div class="empty-state">暂无项目记录，请在上方添加 📝</div>
+        <div class="empty-state">暂无项目记录，请在上方添加</div>
         {% endif %}
     </div>
 
     <div class="footer-text">数据存储于 data.json · 自动保存</div>
 </div>
 
-<!-- 手续费编辑模态框 -->
+<!-- Fee Edit Modal -->
 <div class="modal fade" id="feeModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content" style="border-radius: 16px; border: none; box-shadow: var(--shadow-lg);">
             <form method="post" action="/update_fee">
-                <div class="modal-header">
-                    <h5 class="modal-title">修改手续费</h5>
+                <div class="modal-header" style="border-bottom: 1px solid rgba(0,0,0,0.06); padding: 18px 20px;">
+                    <h5 class="modal-title" style="font-weight: 600; font-size: 1rem; letter-spacing: -0.01em;">修改手续费</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="padding: 20px;">
                     <input type="hidden" name="id" id="feeRecordId">
-                    <div class="form-label-custom">手续费 (￥)</div>
-                    <input type="number" class="form-control" name="fee" id="feeInput" min="0" required>
-                    <div class="form-hint mt-2">实际到手 = 金额 - 手续费</div>
+                    <div class="form-label-apple">手续费</div>
+                    <input type="number" class="form-control" name="fee" id="feeInput" min="0" required placeholder="0">
+                    <div style="font-size:0.78rem; color: var(--text-tertiary); margin-top: 8px;">实际到手 = 金额 − 手续费</div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="submit" class="btn btn-primary">保存</button>
+                <div class="modal-footer" style="border-top: 1px solid rgba(0,0,0,0.06); padding: 14px 20px;">
+                    <button type="button" class="btn-reset-apple" data-bs-dismiss="modal">取消</button>
+                    <button type="submit" class="btn-primary-apple">保存</button>
                 </div>
             </form>
         </div>
@@ -500,16 +621,16 @@
 <script>
 document.getElementById('status_incomplete').addEventListener('change', function() {
     const dateInput = document.querySelector('input[name="completion_date"]');
-    const hint = document.querySelector('.form-hint');
+    const hint = document.querySelector('.d-flex.align-items-center.gap-3 span');
     if (this.checked) {
         dateInput.required = false;
         dateInput.value = '';
-        dateInput.style.opacity = '0.4';
-        hint.textContent = '📋 完成项目时自动填写日期';
+        dateInput.style.opacity = '0.35';
+        if (hint) hint.textContent = '完成项目时自动填写日期';
     } else {
         dateInput.required = true;
         dateInput.style.opacity = '1';
-        hint.textContent = '⏱ 预计结款日期自动设为完成日期 + 5 天';
+        if (hint) hint.textContent = '预计结款日期 = 完成日期 + 5 天';
     }
 });
 

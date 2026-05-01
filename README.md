@@ -15,12 +15,34 @@ A lightweight local web application for tracking and managing freelance / part-t
 - **Statistics Cards** — Top-level summary: total net, pending, settled, and in-progress amounts
 - **Persistent Storage** — All data saved locally in `data.json`
 
+## Changelog
+
+### v2.0 (2026-05-01) — Apple-style UI Redesign
+
+- **Design overhaul** — Migrated from Bootstrap gradient cards to a cleaner Apple-style design system with CSS custom properties, SF Pro fonts, and softer color palette
+- **Layout update** — Stat cards now use CSS Grid instead of Bootstrap row/col, with white cards and circular icon containers replacing gradient backgrounds
+- **Hero header** — Added centered hero section with larger title and tagline
+- **Form styling** — Apple-style uppercase labels, pill-shaped submit button, refined focus states
+- **Table refinement** — Minimalist table with lighter borders, muted header text, softer hover states
+- **Status badges** — Pill-shaped badges with subtle background tints instead of filled labels
+- **Action buttons** — Pill-shaped action buttons with transparent backgrounds that fill on hover
+- **Modal redesign** — Centered modal with shadow, rounded corners, matching Apple aesthetic
+- **Currency symbol** — Changed from `￥` to `¥`
+- **No backend changes** — All functionality and API routes remain identical
+
+### v1.0 — Initial Release
+
+- Basic CRUD for project income records
+- Settlement toggle, progress tracking, fee deduction
+- Sorting, filtering, statistics cards
+- JSON file-based persistence
+
 ## Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
 | Backend   | Python + Flask |
-| Frontend  | Bootstrap 5 |
+| Frontend  | Bootstrap 5 (Apple-style UI) |
 | Data      | JSON file |
 
 ## Getting Started
