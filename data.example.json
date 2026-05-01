@@ -1,0 +1,35 @@
+[
+  {
+    "id": "001",
+    "type": "Data Processing",
+    "path": "/projects/001",
+    "completion_date": "2026-04-20",
+    "expected_settlement_date": "2026-04-25",
+    "amount": 100,
+    "fee": 2,
+    "completed": true,
+    "settled": true
+  },
+  {
+    "id": "002",
+    "type": "Web Scraping",
+    "path": "/projects/002",
+    "completion_date": "2026-04-22",
+    "expected_settlement_date": "2026-04-27",
+    "amount": 150,
+    "fee": 0,
+    "completed": true,
+    "settled": false
+  },
+  {
+    "id": "003",
+    "type": "Report Writing",
+    "path": "/projects/003",
+    "completion_date": "",
+    "expected_settlement_date": "",
+    "amount": 80,
+    "fee": 0,
+    "completed": false,
+    "settled": false
+  }
+]
